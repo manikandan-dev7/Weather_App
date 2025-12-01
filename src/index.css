@@ -7,3 +7,21 @@
   50% { transform: translateY(-8px); }
   100% { transform: translateY(0); }
 }
+.bg-weather-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #0f172a, #1e293b, #334155); /* default dark vibe */
+  z-index: 0;
+}
+
+/* Optional animated gradient effect */
+.bg-weather-gradient-animate {
+  background-size: 200% 200%;
+  animation: gradientMove 10s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

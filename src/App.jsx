@@ -2,7 +2,8 @@ import { useState } from "react";
 import SearchBar from "./components/SearchBar";
 import WeatherCard from "./components/WeatherCard";
 
-const API_KEY = "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={4fc469e2a566c4c9b8466bc197badb9d}"; 
+const API_KEY = import.meta.env.VITE_API_KEY;
+const API_URL = `https://api.openweathermap.org/data/2.5/weather`;
 
 function App() {
   const [city, setCity] = useState("");
@@ -33,7 +34,9 @@ function App() {
 
       if (!res.ok) {
         console.log("API error:", data);
-        throw new Error(data?.message || "Something went wrong. Please try again.");
+        throw new Error(
+          data?.message || "Something went wrong. Please try again."
+        );
       }
 
       setWeather(data);
@@ -51,10 +54,12 @@ function App() {
 
     const main = weather.weather?.[0]?.main?.toLowerCase() || "";
 
-    if (main.includes("cloud")) return "from-slate-500 via-slate-700 to-slate-900";
+    if (main.includes("cloud"))
+      return "from-slate-500 via-slate-700 to-slate-900";
     if (main.includes("rain") || main.includes("drizzle"))
       return "from-sky-900 via-slate-900 to-black";
-    if (main.includes("thunder")) return "from-indigo-800 via-slate-900 to-black";
+    if (main.includes("thunder"))
+      return "from-indigo-800 via-slate-900 to-black";
     if (main.includes("snow")) return "from-sky-200 via-sky-400 to-slate-600";
     if (main.includes("clear")) return "from-sky-400 via-sky-500 to-blue-700";
 
@@ -64,7 +69,9 @@ function App() {
   return (
     <div className="relative w-full min-h-screen overflow-hidden text-white">
       {/* Gradient background */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${getBackgroundClasses()}`} />
+      <div
+        className={`absolute inset-0 bg-weather-gradient .bg-weather-gradient-animate gradientMove ${getBackgroundClasses()}`}
+      />
 
       {/* Soft background image overlay */}
       <div
@@ -89,13 +96,14 @@ function App() {
           {/* Header */}
           <header className="flex flex-col gap-2 mb-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight">BreezeCast</h1>
+              <h1 className="text-3xl font-semibold tracking-tight">
+                BreezeCast
+              </h1>
               <p className="text-sm md:text-base text-white/80">
                 Minimal weather dashboard - just type a city and vibe. 🌦️
               </p>
             </div>
           </header>
-
           {/* Search */}
           <SearchBar
             city={city}
@@ -103,33 +111,31 @@ function App() {
             onSearch={fetchWeather}
             loading={loading}
           />
-
           {/* Error message */}
           {error && (
             <p className="px-3 py-2 mt-3 text-sm text-red-200 border bg-red-500/20 border-red-300/40 rounded-xl">
               {error}
             </p>
           )}
-
           {/* Loader */}
           {loading && (
             <div className="flex justify-center py-6">
               <div className="w-10 h-10 border-4 rounded-full border-white/40 border-t-white animate-spin" />
             </div>
           )}
-
           {/* Weather card */}
           {!loading && weather && (
             <div className="mt-4">
               <WeatherCard weather={weather} />
             </div>
           )}
-
           {/* Empty state */}
           {!loading && !weather && !error && (
-            <p className="mt-4 text-xs md:text-sm text-white/75">
-              Try searching for <span className="font-semibold">Madurai</span> or{" "}
-              <span className="font-semibold">Chennai</span> to test the API response.
+            <p className="mt-4 text-xs text-center md:text-sm text-white/75">
+              Search any <span className="font-semibold">city</span>,{" "}
+              <span className="font-semibold">district</span>, or{" "}
+              <span className="font-semibold">state</span> to check the current
+              weather.
             </p>
           )}
         </div>
